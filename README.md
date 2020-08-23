@@ -4,7 +4,7 @@ magic-words is a trie implementation with json and javascript.
 
 ## usage
 
-####add data with addWords method..
+add data with addWord method..
 
 ![alt text](https://raw.githubusercontent.com/AmanParmar-git/magic-words/master/screenshots/1.png)
 
