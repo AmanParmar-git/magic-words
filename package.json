@@ -1,0 +1,17 @@
+{
+  "name": "magic-words",
+  "version": "1.0.1",
+  "description": "wordplay is trie implementation with json and javascript!",
+  "main": "Trie.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "trie",
+    "didyoumean",
+    "json",
+    "searchengine"
+  ],
+  "author": "AmanParmar",
+  "license": "MIT"
+}
