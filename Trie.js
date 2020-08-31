@@ -1,23 +1,28 @@
 const Node = require("./Node");
 const util = require("util");
 const fs = require("fs");
-const data = require("./data.json");
+
+try {
+  var main = require("./data.json");
+} catch (e) {
+  main = new Node(null);
+}
 
 function trie() {
-  let main = new Node(null);
+  this.save = function () {
+    fs.writeFileSync(
+      // "node_modules/magic-words/data.json",
+      "data.json",
+      JSON.stringify(main)
+    );
+  };
 
-  this.addWord = function (word, mode = "new") {
-    if (mode === "new" && !data.includes(word)) {
-      data.push(word);
-      fs.writeFileSync(
-        "node_modules/magic-words/data.json",
-        JSON.stringify(data)
-      );
-    }
+  this.addWord = function (word = "") {
+    if (word === "") return;
     let current = main;
     for (let i = 0; i < word.length; i++) {
       let char = word.charAt(i);
-      let index = contains(current.children, char);
+      let index = getIndex(current.children, char);
       if (index === -1) {
         if (i === word.length - 1) {
           current.children.push(new Node(char, true));
@@ -36,15 +41,8 @@ function trie() {
   };
 
   this.containsWord = function (word) {
-    let current = main;
-    for (let i = 0; i < word.length; i++) {
-      const char = word.charAt(i);
-      const index = contains(current.children, char);
-      if (index === -1) {
-        return false;
-      }
-      current = current.children[index];
-    }
+    let current = getLastChar(word);
+
     return current.isEnd;
   };
 
@@ -54,20 +52,44 @@ function trie() {
 
   this.didYouMean = function (word) {
     const result = [];
-    let current = main;
-    for (let i = 0; i < word.length; i++) {
-      const char = word.charAt(i);
-      const index = contains(current.children, char);
-      if (index === -1) {
-        return result;
-      }
-      current = current.children[index];
-    }
+    let current = getLastChar(word);
 
     getWords(result, current, word);
 
     return result;
   };
+
+  this.removeWord = function (word) {
+    const nodes = [];
+    let current = getLastChar(word, nodes);
+    if (!current) return;
+    current.isEnd = false;
+
+    if (current.children.length === 0) {
+      for (let i = nodes.length - 1; i > 0; i--) {
+        if (!nodes[i].isEnd) {
+          let index = getIndex(nodes[i - 1].children, nodes[i].val);
+          nodes[i - 1].children.splice(index, 1);
+        } else {
+          return;
+        }
+      }
+    }
+  };
+
+  function getLastChar(word, nodes) {
+    let current = main;
+    for (let i = 0; i < word.length; i++) {
+      const char = word.charAt(i);
+      const index = getIndex(current.children, char);
+      if (index === -1) {
+        return;
+      }
+      if (nodes) nodes.push(current);
+      current = current.children[index];
+    }
+    return current;
+  }
 
   function getWords(result, current, word) {
     for (let i = 0; i < current.children.length; i++) {
@@ -80,7 +102,7 @@ function trie() {
     }
   }
 
-  function contains(array, char) {
+  function getIndex(array, char) {
     for (let i = 0; i < array.length; i++) {
       let query = array[i].val;
       if (query === char) return i;
@@ -90,7 +112,5 @@ function trie() {
 }
 
 const t = new trie();
-for (let i = 0; i < data.length; i++) {
-  t.addWord(data[i], "old");
-}
+
 module.exports = t;
