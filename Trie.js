@@ -11,8 +11,7 @@ try {
 function trie() {
   this.save = function () {
     fs.writeFileSync(
-      // "node_modules/magic-words/data.json",
-      "data.json",
+      "node_modules/magic-words/data.json",
       JSON.stringify(main)
     );
   };
@@ -42,8 +41,8 @@ function trie() {
 
   this.containsWord = function (word) {
     let current = getLastChar(word);
-
-    return current.isEnd;
+    if (current) return current.isEnd;
+    return false;
   };
 
   this.inspectTrie = function () {

@@ -4,11 +4,11 @@ magic-words is a trie implementation with json and javascript.
 
 ## usage
 
-add data with addWord method..
+add words with addWord and remove them with removeWord methods.
 
 ![alt text](https://raw.githubusercontent.com/AmanParmar-git/magic-words/master/screenshots/1.png)
 
-#### you can inspect trie with this method
+#### inspect trie
 
 ```
 console.log(mw.inspectTrie());
@@ -20,7 +20,7 @@ result will be
 
 #### JSON
 
-your added strings will be stored in json file and it will be loaded everytime you start the script. you can delete any of string or modify them by going to node_module/magic-words/data.json
+your added strings will be stored in json file and it will be loaded everytime you start the script. it will be in node_module/magic-words/data.json. also don't forget to call mw.save() to save your file in disk after you remove or add words.
 
 ![alt text](https://raw.githubusercontent.com/AmanParmar-git/magic-words/master/screenshots/data.png)
 
